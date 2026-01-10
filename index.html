@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ================= META ================= -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banco de Horas</title>
+
+  <!-- ================= FONTS ================= -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Inter:wght@300;400;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- ================= CSS ================= -->
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+  <!-- ================= DASHBOARD ================= -->
+  <main class="dashboard">
+
+    <!-- ================= RELÓGIO ================= -->
+    <section class="clock" id="clock">
+      00:00:00
+    </section>
+
+    <!-- ================= SALDO ================= -->
+    <section class="card saldo">
+      <h2>Saldo de Horas</h2>
+      <span id="saldo" class="saldo-neutro">0h</span>
+    </section>
+
+    <!-- ================= FORMULÁRIO ================= -->
+    <section class="card form">
+      <h2>Novo Registro</h2>
+
+      <!-- FORM ENVIA DIRETO PARA O GOOGLE APPS SCRIPT -->
+      <form
+        action="https://script.google.com/macros/s/AKfycbzdchlDiqEdCL1aKeDXYjOAmOTv2cKo_pQTlXDhQwE-wUsf1Kgkh7PXYgudjvZW622M/exec"
+        method="GET"
+        target="hidden_iframe"
+        onsubmit="return onSubmitForm()"
+      >
+
+        <!-- ATENÇÃO: name="" É OBRIGATÓRIO -->
+        <select id="tipo" name="tipo" required>
+          <option value="extra">Hora Extra (+)</option>
+          <option value="quitacao">Quitação (-)</option>
+        </select>
+
+        <input
+          type="date"
+          id="data"
+          name="data"
+          required
+        >
+
+        <input
+          type="number"
+          id="horas"
+          name="horas"
+          step="0.25"
+          placeholder="Horas (ex: 1.5)"
+          required
+        >
+
+        <input
+          type="text"
+          id="descricao"
+          name="descricao"
+          placeholder="Descrição"
+          required
+        >
+
+        <!-- CACHE BUSTER (OBRIGATÓRIO PARA GET) -->
+        <input
+          type="hidden"
+          id="ts"
+          name="ts"
+        >
+
+        <button type="submit" id="btnSalvar">
+          Salvar Registro
+        </button>
+
+      </form>
+    </section>
+
+    <!-- ================= HISTÓRICO LOCAL ================= -->
+    <section class="card historico">
+      <h2>Histórico Local</h2>
+
+      <div id="historico-container">
+        <ul id="lista"></ul>
+      </div>
+
+      <button id="btnLimpar" class="btn-limpar">
+        Limpar Histórico Local
+      </button>
+
+      <button id="btnExportar">
+        Exportar para JSON
+      </button>
+    </section>
+
+  </main>
+
+  <!-- ================= IFRAME INVISÍVEL ================= -->
+  <iframe
+    name="hidden_iframe"
+    style="display:none;"
+  ></iframe>
+
+  <!-- ================= TOAST ================= -->
+  <div
+    id="toast"
+    class="toast"
+    role="alert"
+    aria-live="polite"
+  ></div>
+
+  <!-- ================= JS ================= -->
+  <!-- NÃO coloque nenhum JS inline -->
+  <script src="./script.js"></script>
+
+</body>
+</html>
