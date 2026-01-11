@@ -1,5 +1,5 @@
 /* =====================================================
-   CONFIGURAÇÃO DA API (CONFIRMADA FUNCIONAL)
+   CONFIGURAÇÃO DA API
 ===================================================== */
 const API_URL =
   "https://script.google.com/macros/s/AKfycbz7oyxwHcqq6x7sQWZoyLRowMKxCGtfjfLijcX9iF_ONYqCt5lYvce2qbH5oKPPxSmelg/exec";
@@ -8,17 +8,14 @@ const API_URL =
    RELÓGIO
 ===================================================== */
 function atualizarRelogio() {
-  const agora = new Date();
-  const clockEl = document.getElementById("clock");
-  if (clockEl) {
-    clockEl.textContent = agora.toLocaleTimeString("pt-BR");
-  }
+  const el = document.getElementById("clock");
+  if (el) el.textContent = new Date().toLocaleTimeString("pt-BR");
 }
 setInterval(atualizarRelogio, 1000);
 atualizarRelogio();
 
 /* =====================================================
-   ELEMENTOS DO DOM
+   ELEMENTOS
 ===================================================== */
 const form = document.getElementById("formBancoHoras");
 const nomeInput = document.getElementById("nome");
@@ -38,25 +35,19 @@ if (dataInput) {
 }
 
 /* =====================================================
-   UX – TIPO (EXTRA / QUITAÇÃO)
+   UX TIPO
 ===================================================== */
 tipoInput.addEventListener("change", () => {
-  if (tipoInput.value === "quitacao") {
-    descricaoInput.placeholder = "Quitação / pagamento de horas";
-    horasInput.style.borderColor = "#ff6b6b";
-  } else {
-    descricaoInput.placeholder = "Descrição";
-    horasInput.style.borderColor = "#00ffcc";
-  }
+  horasInput.style.borderColor =
+    tipoInput.value === "quitacao" ? "#ff6b6b" : "#00ffcc";
 });
 
 /* =====================================================
-   CONSULTA DE SALDO (BACKEND CONFIRMADO)
+   CONSULTA DE SALDO
 ===================================================== */
 async function consultarSaldo() {
   const nome = nomeInput.value.trim();
 
-  // estado neutro
   if (!nome) {
     saldoEl.textContent = "+0h";
     saldoEl.classList.remove("positivo", "negativo");
@@ -66,73 +57,53 @@ async function consultarSaldo() {
   saldoEl.textContent = "⏳";
 
   try {
-    const response = await fetch(
+    const res = await fetch(
       `${API_URL}?action=saldo&nome=${encodeURIComponent(nome)}`,
       { cache: "no-store" }
     );
 
-    if (!response.ok) {
-      throw new Error("Falha na resposta da API");
-    }
-
-    const data = await response.json();
-    console.log("Resposta da API:", data); // DEBUG VISUAL
+    const data = await res.json();
+    console.log("API:", data);
 
     const saldo = Number(data.saldo);
 
-    // tratamento EXATO do zero
-    if (isNaN(saldo) || saldo === 0) {
+    if (!saldo) {
       saldoEl.textContent = "+0h";
       saldoEl.classList.remove("positivo", "negativo");
       return;
     }
 
     saldoEl.textContent = `${saldo > 0 ? "+" : ""}${saldo}h`;
+    saldoEl.classList.toggle("positivo", saldo > 0);
+    saldoEl.classList.toggle("negativo", saldo < 0);
 
-    saldoEl.classList.remove("positivo", "negativo");
-    if (saldo > 0) saldoEl.classList.add("positivo");
-    if (saldo < 0) saldoEl.classList.add("negativo");
-
-  } catch (erro) {
-    console.error("Erro ao consultar saldo:", erro);
+  } catch (err) {
+    console.error(err);
     saldoEl.textContent = "+0h";
-    saldoEl.classList.remove("positivo", "negativo");
   }
 }
 
 /* =====================================================
-   EVENTOS DE CONSULTA
+   EVENTOS
 ===================================================== */
 nomeInput.addEventListener("input", () => {
-  if (nomeInput.value.trim().length >= 3) {
-    consultarSaldo();
-  }
+  if (nomeInput.value.length >= 3) consultarSaldo();
 });
-
 nomeInput.addEventListener("blur", consultarSaldo);
 
 /* =====================================================
-   SUBMIT DO FORMULÁRIO
+   SUBMIT
 ===================================================== */
 form.addEventListener("submit", () => {
-  // timestamp para evitar cache no Apps Script
   tsInput.value = Date.now();
-
-  // feedback visual
   toast.classList.add("show");
   setTimeout(() => toast.classList.remove("show"), 3000);
-
-  // aguarda gravação no Sheets e recalcula
   setTimeout(consultarSaldo, 1500);
 });
 
 /* =====================================================
-   CONSULTA AO ABRIR A PÁGINA
+   AO ABRIR
 ===================================================== */
 window.addEventListener("load", () => {
-  if (nomeInput.value.trim()) {
-    consultarSaldo();
-  } else {
-    saldoEl.textContent = "+0h";
-  }
+  saldoEl.textContent = "+0h";
 });
