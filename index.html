@@ -7,61 +7,118 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Inter:wght@300;400;600&display=swap"
+    rel="stylesheet"
+  >
 
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
-  <main class="dashboard">
+<!-- =====================================================
+     LOGIN
+===================================================== -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-box">
 
-    <!-- RELÓGIO -->
-    <div class="clock" id="clock">00:00:00</div>
+    <!-- LOGO CERTA -->
+    <div class="logo-certa" aria-label="CERTA">
+      <span class="c">C</span>
+      <span class="e">E</span>
+      <span class="r">R</span>
+      <span class="t">T</span>
+      <span class="a">A</span>
+    </div>
 
-    <!-- SALDO -->
-    <section class="card saldo-card">
-      <h2>Saldo de Horas</h2>
-      <div id="saldoValor" class="saldo">—</div>
-    </section>
+    <p class="subtitle">Banco de Horas</p>
 
-    <!-- FORM -->
-    <section class="card form-card">
-      <h2>Novo Registro</h2>
+    <input
+      type="text"
+      id="loginUsuario"
+      placeholder="Usuário"
+      autocomplete="username"
+    >
 
-      <form
-        id="formBancoHoras"
-        action="https://script.google.com/macros/s/AKfycbz7oyxwHcqq6x7sQWZoyLRowMKxCGtfjfLijcX9iF_ONYqCt5lYvce2qbH5oKPPxSmelg/exec"
-        method="GET"
-        target="hidden_iframe"
+    <input
+      type="password"
+      id="loginSenha"
+      placeholder="Senha"
+      autocomplete="current-password"
+    >
+
+    <button id="btnLogin" type="button">Entrar</button>
+
+    <div id="loginErro" class="login-erro" role="alert"></div>
+  </div>
+</div>
+
+<!-- =====================================================
+     SISTEMA
+===================================================== -->
+<main class="dashboard" id="appScreen" style="display:none;">
+
+  <!-- RELÓGIO -->
+  <div class="clock" id="clock">00:00:00</div>
+
+  <!-- SALDO -->
+  <section class="card saldo-card">
+    <h2>Saldo de Horas</h2>
+    <div id="saldoValor" class="saldo">+0h</div>
+  </section>
+
+  <!-- FORMULÁRIO -->
+  <section class="card form-card">
+    <h2>Novo Registro</h2>
+
+    <form id="formBancoHoras" autocomplete="off">
+
+      <!-- IDENTIDADE AUTOMÁTICA -->
+      <input
+        type="text"
+        id="nome"
+        placeholder="Nome completo"
+        readonly
+        aria-readonly="true"
       >
 
-        <input type="text" id="nome" name="nome" placeholder="Nome completo" required>
+      <select id="tipo">
+        <option value="extra">Hora Extra (+)</option>
+        <option value="quitacao">Quitação (-)</option>
+      </select>
 
-        <select id="tipo" name="tipo">
-          <option value="extra">Hora Extra (+)</option>
-          <option value="quitacao">Quitação (-)</option>
-        </select>
+      <input
+        type="date"
+        id="data"
+        required
+      >
 
-        <input type="date" id="data" name="data" required>
+      <input
+        type="number"
+        id="horas"
+        step="0.25"
+        placeholder="Horas (ex: 1.5)"
+        required
+      >
 
-        <input type="number" id="horas" name="horas" step="0.25" placeholder="Horas (ex: 1.5)" required>
+      <input
+        type="text"
+        id="descricao"
+        placeholder="Descrição"
+        required
+      >
 
-        <input type="text" id="descricao" name="descricao" placeholder="Descrição" required>
+      <button type="submit">Salvar Registro</button>
+    </form>
+  </section>
 
-        <input type="hidden" id="ts" name="ts">
+</main>
 
-        <button type="submit">Salvar Registro</button>
-      </form>
-    </section>
+<!-- TOAST -->
+<div class="toast" id="toast" aria-live="polite">
+  Registro salvo no Banco de Horas
+</div>
 
-  </main>
-
-  <!-- iframe invisível -->
-  <iframe name="hidden_iframe" style="display:none;"></iframe>
-
-  <!-- toast -->
-  <div class="toast" id="toast">Registro salvo no Banco de Horas</div>
-
-  <script src="./script.js"></script>
+<script src="./script.js"></script>
 </body>
 </html>
