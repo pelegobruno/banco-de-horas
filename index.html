@@ -1,131 +1,67 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <!-- ================= META ================= -->
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Banco de Horas</title>
+  <title>CERTA | Banco de Horas</title>
 
-  <!-- ================= FONTS ================= -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Inter:wght@300;400;600&display=swap"
-    rel="stylesheet"
-  >
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-  <!-- ================= CSS ================= -->
   <link rel="stylesheet" href="./style.css">
 </head>
-
 <body>
 
-  <!-- ================= DASHBOARD ================= -->
   <main class="dashboard">
 
-    <!-- ================= RELÓGIO ================= -->
-    <section class="clock" id="clock">
-      00:00:00
-    </section>
+    <!-- RELÓGIO -->
+    <div class="clock" id="clock">00:00:00</div>
 
-    <!-- ================= SALDO ================= -->
-    <section class="card saldo">
+    <!-- SALDO -->
+    <section class="card saldo-card">
       <h2>Saldo de Horas</h2>
-      <span id="saldo" class="saldo-neutro">0h</span>
+      <div id="saldoValor" class="saldo">—</div>
     </section>
 
-    <!-- ================= FORMULÁRIO ================= -->
-    <section class="card form">
+    <!-- FORM -->
+    <section class="card form-card">
       <h2>Novo Registro</h2>
 
-      <!-- FORM ENVIA DIRETO PARA O GOOGLE APPS SCRIPT -->
       <form
-        action="https://script.google.com/macros/s/AKfycbzdchlDiqEdCL1aKeDXYjOAmOTv2cKo_pQTlXDhQwE-wUsf1Kgkh7PXYgudjvZW622M/exec"
+        id="formBancoHoras"
+        action="https://script.google.com/macros/s/AKfycbz7oyxwHcqq6x7sQWZoyLRowMKxCGtfjfLijcX9iF_ONYqCt5lYvce2qbH5oKPPxSmelg/exec"
         method="GET"
         target="hidden_iframe"
-        onsubmit="return onSubmitForm()"
       >
 
-        <!-- ATENÇÃO: name="" É OBRIGATÓRIO -->
-        <select id="tipo" name="tipo" required>
+        <input type="text" id="nome" name="nome" placeholder="Nome completo" required>
+
+        <select id="tipo" name="tipo">
           <option value="extra">Hora Extra (+)</option>
           <option value="quitacao">Quitação (-)</option>
         </select>
 
-        <input
-          type="date"
-          id="data"
-          name="data"
-          required
-        >
+        <input type="date" id="data" name="data" required>
 
-        <input
-          type="number"
-          id="horas"
-          name="horas"
-          step="0.25"
-          placeholder="Horas (ex: 1.5)"
-          required
-        >
+        <input type="number" id="horas" name="horas" step="0.25" placeholder="Horas (ex: 1.5)" required>
 
-        <input
-          type="text"
-          id="descricao"
-          name="descricao"
-          placeholder="Descrição"
-          required
-        >
+        <input type="text" id="descricao" name="descricao" placeholder="Descrição" required>
 
-        <!-- CACHE BUSTER (OBRIGATÓRIO PARA GET) -->
-        <input
-          type="hidden"
-          id="ts"
-          name="ts"
-        >
+        <input type="hidden" id="ts" name="ts">
 
-        <button type="submit" id="btnSalvar">
-          Salvar Registro
-        </button>
-
+        <button type="submit">Salvar Registro</button>
       </form>
-    </section>
-
-    <!-- ================= HISTÓRICO LOCAL ================= -->
-    <section class="card historico">
-      <h2>Histórico Local</h2>
-
-      <div id="historico-container">
-        <ul id="lista"></ul>
-      </div>
-
-      <button id="btnLimpar" class="btn-limpar">
-        Limpar Histórico Local
-      </button>
-
-      <button id="btnExportar">
-        Exportar para JSON
-      </button>
     </section>
 
   </main>
 
-  <!-- ================= IFRAME INVISÍVEL ================= -->
-  <iframe
-    name="hidden_iframe"
-    style="display:none;"
-  ></iframe>
+  <!-- iframe invisível -->
+  <iframe name="hidden_iframe" style="display:none;"></iframe>
 
-  <!-- ================= TOAST ================= -->
-  <div
-    id="toast"
-    class="toast"
-    role="alert"
-    aria-live="polite"
-  ></div>
+  <!-- toast -->
+  <div class="toast" id="toast">Registro salvo no Banco de Horas</div>
 
-  <!-- ================= JS ================= -->
-  <!-- NÃO coloque nenhum JS inline -->
   <script src="./script.js"></script>
-
 </body>
 </html>
